@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BizPilot AI — From Idea to Business</title>
+<meta name="description" content="BizPilot AI helps you turn an idea into an actionable business plan, website and launch roadmap.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="nav">
+  <a class="logo" href="#">BizPilot<span>AI</span></a>
+  <nav><a href="#features">Features</a><a href="#how">How it works</a><a href="#pricing">Pricing</a></nav>
+  <button class="btn small" onclick="openApp()">Start Free</button>
+</header>
+
+<main>
+<section class="hero">
+  <div class="badge">✦ AI Business Partner</div>
+  <h1>From <span>idea</span><br>to business.</h1>
+  <p>Turn your goal into a business roadmap, website and daily action plan with an AI coach built for entrepreneurs worldwide.</p>
+  <div class="hero-actions"><button class="btn" onclick="openApp()">Start your free trial →</button><a class="text-link" href="#how">See how it works</a></div>
+  <div class="trust">🌍 Built for entrepreneurs worldwide · 🌐 Multi-language ready · ⚡ Start in minutes</div>
+</section>
+
+<section id="features" class="section">
+  <div class="eyebrow">WHAT YOU GET</div><h2>Everything between an idea and a launch.</h2>
+  <div class="grid">
+    <article><div class="icon">💡</div><h3>Business Ideas</h3><p>Get ideas matched to your country, budget, skills and goals.</p></article>
+    <article><div class="icon">🧭</div><h3>Action Roadmap</h3><p>Turn a vague goal into clear milestones and daily tasks.</p></article>
+    <article><div class="icon">🌐</div><h3>AI Website Builder</h3><p>Generate a business website from a simple description.</p></article>
+    <article><div class="icon">🎙️</div><h3>Voice Coach</h3><p>Ask what to do next and get practical coaching in your language.</p></article>
+    <article><div class="icon">📣</div><h3>Marketing Assistant</h3><p>Create content ideas, offers and launch campaigns faster.</p></article>
+    <article><div class="icon">📊</div><h3>Progress Dashboard</h3><p>Track what is done, what is next and where your business stands.</p></article>
+  </div>
+</section>
+
+<section id="how" class="section dark">
+  <div class="eyebrow">HOW IT WORKS</div><h2>One conversation. One roadmap.</h2>
+  <div class="steps">
+    <div><b>01</b><h3>Tell us your goal</h3><p>Country, budget, skills, experience and business ambition.</p></div>
+    <div><b>02</b><h3>Build your plan</h3><p>AI turns your information into an actionable business plan.</p></div>
+    <div><b>03</b><h3>Build & launch</h3><p>Create your website, marketing assets and launch checklist.</p></div>
+  </div>
+</section>
+
+<section id="pricing" class="section">
+  <div class="eyebrow">PRICING</div><h2>Start free. Upgrade when you need more.</h2>
+  <div class="pricing">
+    <article class="price"><span>FREE</span><h3>$0</h3><p>For exploring your first idea.</p><ul><li>1 business assessment</li><li>1 business plan</li><li>Website preview</li><li>Limited AI coaching</li></ul><button class="btn outline" onclick="openApp()">Try free</button></article>
+    <article class="price featured"><span>PRO</span><h3>$9.99<small>/month</small></h3><p>For people serious about launching.</p><ul><li>Unlimited AI coaching</li><li>Voice coach</li><li>AI website builder</li><li>Marketing assistant</li><li>Progress dashboard</li></ul><button class="btn" onclick="alert('Payment integration is not connected in this MVP.')">Go Pro</button></article>
+  </div>
+</section>
+</main>
+
+<footer><strong>BizPilot AI</strong><span>© 2026 · From Idea to Business.</span></footer>
+
+<div id="app" class="modal">
+ <div class="app-card">
+  <button class="close" onclick="closeApp()">×</button>
+  <div class="eyebrow">FREE BUSINESS ASSESSMENT</div>
+  <h2>Let's build your starting point.</h2>
+  <form id="assessment">
+   <label>Country<select id="country"><option>Bangladesh</option><option>Saudi Arabia</option><option>United States</option><option>United Kingdom</option><option>United Arab Emirates</option><option>Other</option></select></label>
+   <label>Preferred language<select><option>English</option><option>বাংলা</option><option>العربية</option><option>Español</option><option>हिन्दी</option></select></label>
+   <label>Budget<input id="budget" placeholder="e.g. $500"></label>
+   <label>Skills / experience<textarea id="skills" placeholder="What can you do? What have you worked with?"></textarea></label>
+   <label>What do you want to build?<textarea id="goal" placeholder="e.g. An online clothing business"></textarea></label>
+   <button class="btn full" type="submit">Generate my roadmap →</button>
+  </form>
+  <div id="result" class="result"></div>
+ </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
