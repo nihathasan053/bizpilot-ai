@@ -1,1 +1,71 @@
-function openApp(){document.getElementById('app').style.display='block';document.body.style.overflow='hidden'}function closeApp(){document.getElementById('app').style.display='none';document.body.style.overflow='auto'}document.getElementById('assessment').addEventListener('submit',function(e){e.preventDefault();const country=document.getElementById('country').value,budget=document.getElementById('budget').value||'your stated budget',goal=document.getElementById('goal').value||'your business idea',skills=document.getElementById('skills').value||'beginner level';const r=document.getElementById('result');r.style.display='block';r.innerHTML=`<strong>Your starter roadmap</strong><b>Market:</b> ${country}<br><b>Goal:</b> ${goal}<br><b>Budget:</b> ${budget}<br><b>Starting point:</b> ${skills}<br><br><b>Next 5 steps</b><br>1. Validate the customer problem<br>2. Research 10 competitors<br>3. Choose one focused offer<br>4. Calculate startup and selling costs<br>5. Build and test your first landing page<br><br><small>This is a demo response. Connect an AI API to generate personalized recommendations.</small>`;r.scrollIntoView({behavior:'smooth',block:'nearest'})});window.addEventListener('click',e=>{if(e.target.id==='app')closeApp()});
+function openApp(){
+  document.getElementById('app').style.display='block';
+  document.body.style.overflow='hidden';
+}
+
+function closeApp(){
+  document.getElementById('app').style.display='none';
+  document.body.style.overflow='auto';
+}
+
+document.getElementById('assessment').addEventListener('submit', async function(e){
+  e.preventDefault();
+
+  const country = document.getElementById('country').value;
+  const budget = document.getElementById('budget').value;
+  const goal = document.getElementById('goal').value;
+  const skills = document.getElementById('skills').value;
+
+  const r = document.getElementById('result');
+
+  r.style.display = 'block';
+  r.innerHTML = '🤖 Creating your personalized AI roadmap...';
+
+  try {
+    const response = await fetch(
+      'https://bizpilot-ai.nihathasan053.workers.dev',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          country,
+          budget,
+          goal,
+          skills
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'AI request failed');
+    }
+
+    r.innerHTML = `
+      <strong>Your AI Business Roadmap</strong>
+      <br><br>
+      ${data.answer.replace(/\n/g, '<br>')}
+    `;
+
+  } catch (error) {
+    r.innerHTML = `
+      <strong>Something went wrong.</strong>
+      <br><br>
+      ${error.message}
+    `;
+  }
+
+  r.scrollIntoView({
+    behavior:'smooth',
+    block:'nearest'
+  });
+});
+
+window.addEventListener('click', function(e){
+  if(e.target.id === 'app'){
+    closeApp();
+  }
+});
