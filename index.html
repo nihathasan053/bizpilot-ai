@@ -3,136 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BizPilot AI - Intelligent Business Assistant V2</title>
+
+    <title>BizPilot AI - Intelligent Business Assistant</title>
+
+    <meta
+        name="description"
+        content="BizPilot AI - AI-powered business planning and business assistant."
+    >
+
     <link rel="stylesheet" href="style.css">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 </head>
+
 <body>
-    <div class="app-container">
 
-        <!-- Sidebar / Navigation -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2>BizPilot AI</h2>
-                <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close Menu">&times;</button>
+<div class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-header">
+            <h2>BizPilot AI</h2>
+
+            <button
+                class="mobile-close-btn"
+                id="mobileCloseBtn"
+                aria-label="Close Menu"
+            >
+                &times;
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <button
+                class="nav-item active"
+                data-tab="dashboard"
+            >
+                Dashboard
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="businessPlan"
+            >
+                Business Plan Generator
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="marketResearch"
+            >
+                Market Research
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="financialPlanner"
+            >
+                Financial Planner
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="aiCoach"
+            >
+                AI Business Coach
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="websiteBuilder"
+            >
+                Website Builder
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="marketingAssistant"
+            >
+                Marketing Assistant
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="assistant"
+            >
+                AI Assistant
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="analytics"
+            >
+                Analytics
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="pricing"
+            >
+                Pricing / Upgrade
+            </button>
+
+            <button
+                class="nav-item"
+                data-tab="settings"
+            >
+                Settings
+            </button>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <span class="version-tag">
+                v2.0.0 Enterprise
+            </span>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="top-header">
+
+            <button
+                class="menu-toggle"
+                id="menuToggle"
+                aria-label="Open Menu"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <h1 id="pageTitle">
+                Dashboard
+            </h1>
+
+            <div class="user-profile">
+
+                <span class="status-indicator"></span>
+
+                <span class="user-name">
+                    Workspace User
+                </span>
+
             </div>
 
-            <nav class="sidebar-nav">
-                <button class="nav-item active" data-tab="dashboard">Dashboard</button>
-                <button class="nav-item" data-tab="businessPlan">Business Plan Generator</button>
-                <button class="nav-item" data-tab="marketResearch">Market Research</button>
-                <button class="nav-item" data-tab="financialPlanner">Financial Planner</button>
-                <button class="nav-item" data-tab="aiCoach">AI Business Coach</button>
-                <button class="nav-item" data-tab="websiteBuilder">Website Builder</button>
-                <button class="nav-item" data-tab="marketingAssistant">Marketing Assistant</button>
-                <button class="nav-item" data-tab="assistant">AI Assistant</button>
-                <button class="nav-item" data-tab="analytics">Analytics</button>
-                <button class="nav-item" data-tab="pricing">Pricing / Upgrade</button>
-                <button class="nav-item" data-tab="settings">Settings</button>
-            </nav>
-
-            <div class="sidebar-footer">
-                <span class="version-tag">v2.0.0 Enterprise</span>
-            </div>
-        </aside>
+        </header>
 
 
-        <!-- Main Content Area -->
-        <main class="main-content">
+        <!-- CONTENT -->
+        <div class="content-body">
 
-            <header class="top-header">
 
-                <button class="menu-toggle" id="menuToggle" aria-label="Open Menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
+            <!-- 1. DASHBOARD -->
+            <section
+                id="dashboardTab"
+                class="tab-pane active"
+            >
 
-                <h1 id="pageTitle">Dashboard</h1>
+                <div class="welcome-banner">
 
-                <div class="user-profile">
-                    <span class="status-indicator"></span>
-                    <span class="user-name">Workspace User</span>
+                    <h2>
+                        Welcome back to BizPilot AI V2
+                    </h2>
+
+                    <p>
+                        Manage your entire business ecosystem
+                        from one intelligent command center.
+                    </p>
+
                 </div>
 
-            </header>
 
+                <div class="stats-grid">
 
-            <div class="content-body">
+                    <div class="stat-card">
 
-                <!-- 1. Dashboard Tab -->
-                <section id="dashboardTab" class="tab-pane active">
+                        <h3>
+                            Total API Requests
+                        </h3>
 
-                    <div class="welcome-banner">
-                        <h2>Welcome back to BizPilot AI V2</h2>
-                        <p>
-                            Manage your entire business ecosystem from one intelligent command center.
-                        </p>
-                    </div>
-
-                    <div class="stats-grid">
-
-                        <div class="stat-card">
-                            <h3>Total API Requests</h3>
-                            <p class="stat-value" id="statQueries">0</p>
-                        </div>
-
-                        <div class="stat-card">
-                            <h3>Worker Status</h3>
-                            <p class="stat-value status-online">Connected</p>
-                        </div>
-
-                        <div class="stat-card">
-                            <h3>Active Modules</h3>
-                            <p class="stat-value">11 Enabled</p>
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                <!-- 2. Business Plan Generator Tab -->
-                <section id="businessPlanTab" class="tab-pane">
-
-                    <div class="module-card">
-
-                        <h2>Business Plan Generator</h2>
-
-                        <p>
-                            Generate comprehensive, structured business plans tailored
-                            to your specific market sector using your Cloudflare Worker backend.
-                        </p>
-
-                        <div class="module-form-group">
-
-                            <input
-                                type="text"
-                                id="businessIdeaInput"
-                                placeholder="e.g., Sustainable packaging startup for e-commerce"
-                            >
-
-                            <button
-                                class="action-btn"
-                                id="generatePlanBtn"
-                            >
-                                Generate Business Plan
-                            </button>
-
-                        </div>
-
-                        <div
-                            class="module-output"
-                            id="businessPlanOutput"
+                        <p
+                            class="stat-value"
+                            id="statQueries"
                         >
-                            Your generated business plan will appear here...
-                        </div>
+                            0
+                        </p>
 
                     </div>
 
-                </section>
+
+                    <div class="stat-card">
+
+                        <h3>
+                            Worker Status
+                        </h3>
+
+                        <p class="stat-value status-online">
+                            Connected
+                        </p>
+
+                    </div>
 
 
-                <!-- 3. Market Research Tab
+                    <div class="stat-card">
+
+                        <h3>
+                            Active Modules
+                        </h3>
+
+                        <p class="stat-value">
+                            11 Enabled
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- 2. BUSINESS PLAN -->
+            <section
+                id="businessPlanTab"
+                class="tab-pane"
+            >
+
+                <div class="module-card">
+
+                    <h2>
+                        Business Plan Generator
+                    </h2>
+
+                    <p>
+                        Generate comprehensive,
+                        structured business plans tailored
+                        to your specific market sector.
+                    </p>
+
+                    <div class="module-form-group">
+
+                        <input
+                            type="text"
+                            id="businessIdeaInput"
+                            placeholder="e.g., Sustainable packaging startup for e-commerce"
+                        >
+
+                        <button
+                            class="action-btn"
+                            id="generatePlanBtn"
+                        >
+                            Generate Business Plan
+                        </button>
+
+                    </div>
+
+                    <div
+                        class="module-output"
+                        id="businessPlanOutput"
+                    >
+                        Your generated business plan
+                        will appear here...
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- 3. MARKET RESEARCH -->
+            <
