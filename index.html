@@ -1,76 +1,138 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BizPilot AI — From Idea to Business</title>
-<meta name="description" content="BizPilot AI helps you turn an idea into an actionable business plan, website and launch roadmap.">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BizPilot AI - Intelligent Business Assistant V2</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<header class="nav">
-  <a class="logo" href="#">BizPilot<span>AI</span></a>
-  <nav><a href="#features">Features</a><a href="#how">How it works</a><a href="#pricing">Pricing</a></nav>
-  <button class="btn small" onclick="openApp()">Start Free</button>
-</header>
+    <div class="app-container">
 
-<main>
-<section class="hero">
-  <div class="badge">✦ AI Business Partner</div>
-  <h1>From <span>idea</span><br>to business.</h1>
-  <p>Turn your goal into a business roadmap, website and daily action plan with an AI coach built for entrepreneurs worldwide.</p>
-  <div class="hero-actions"><button class="btn" onclick="openApp()">Start your free trial →</button><a class="text-link" href="#how">See how it works</a></div>
-  <div class="trust">🌍 Built for entrepreneurs worldwide · 🌐 Multi-language ready · ⚡ Start in minutes</div>
-</section>
+        <!-- Sidebar / Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>BizPilot AI</h2>
+                <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close Menu">&times;</button>
+            </div>
 
-<section id="features" class="section">
-  <div class="eyebrow">WHAT YOU GET</div><h2>Everything between an idea and a launch.</h2>
-  <div class="grid">
-    <article><div class="icon">💡</div><h3>Business Ideas</h3><p>Get ideas matched to your country, budget, skills and goals.</p></article>
-    <article><div class="icon">🧭</div><h3>Action Roadmap</h3><p>Turn a vague goal into clear milestones and daily tasks.</p></article>
-    <article><div class="icon">🌐</div><h3>AI Website Builder</h3><p>Generate a business website from a simple description.</p></article>
-    <article><div class="icon">🎙️</div><h3>Voice Coach</h3><p>Ask what to do next and get practical coaching in your language.</p></article>
-    <article><div class="icon">📣</div><h3>Marketing Assistant</h3><p>Create content ideas, offers and launch campaigns faster.</p></article>
-    <article><div class="icon">📊</div><h3>Progress Dashboard</h3><p>Track what is done, what is next and where your business stands.</p></article>
-  </div>
-</section>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-tab="dashboard">Dashboard</button>
+                <button class="nav-item" data-tab="businessPlan">Business Plan Generator</button>
+                <button class="nav-item" data-tab="marketResearch">Market Research</button>
+                <button class="nav-item" data-tab="financialPlanner">Financial Planner</button>
+                <button class="nav-item" data-tab="aiCoach">AI Business Coach</button>
+                <button class="nav-item" data-tab="websiteBuilder">Website Builder</button>
+                <button class="nav-item" data-tab="marketingAssistant">Marketing Assistant</button>
+                <button class="nav-item" data-tab="assistant">AI Assistant</button>
+                <button class="nav-item" data-tab="analytics">Analytics</button>
+                <button class="nav-item" data-tab="pricing">Pricing / Upgrade</button>
+                <button class="nav-item" data-tab="settings">Settings</button>
+            </nav>
 
-<section id="how" class="section dark">
-  <div class="eyebrow">HOW IT WORKS</div><h2>One conversation. One roadmap.</h2>
-  <div class="steps">
-    <div><b>01</b><h3>Tell us your goal</h3><p>Country, budget, skills, experience and business ambition.</p></div>
-    <div><b>02</b><h3>Build your plan</h3><p>AI turns your information into an actionable business plan.</p></div>
-    <div><b>03</b><h3>Build & launch</h3><p>Create your website, marketing assets and launch checklist.</p></div>
-  </div>
-</section>
+            <div class="sidebar-footer">
+                <span class="version-tag">v2.0.0 Enterprise</span>
+            </div>
+        </aside>
 
-<section id="pricing" class="section">
-  <div class="eyebrow">PRICING</div><h2>Start free. Upgrade when you need more.</h2>
-  <div class="pricing">
-    <article class="price"><span>FREE</span><h3>$0</h3><p>For exploring your first idea.</p><ul><li>1 business assessment</li><li>1 business plan</li><li>Website preview</li><li>Limited AI coaching</li></ul><button class="btn outline" onclick="openApp()">Try free</button></article>
-    <article class="price featured"><span>PRO</span><h3>$9.99<small>/month</small></h3><p>For people serious about launching.</p><ul><li>Unlimited AI coaching</li><li>Voice coach</li><li>AI website builder</li><li>Marketing assistant</li><li>Progress dashboard</li></ul><button class="btn" onclick="alert('Payment integration is not connected in this MVP.')">Go Pro</button></article>
-  </div>
-</section>
-</main>
 
-<footer><strong>BizPilot AI</strong><span>© 2026 · From Idea to Business.</span></footer>
+        <!-- Main Content Area -->
+        <main class="main-content">
 
-<div id="app" class="modal">
- <div class="app-card">
-  <button class="close" onclick="closeApp()">×</button>
-  <div class="eyebrow">FREE BUSINESS ASSESSMENT</div>
-  <h2>Let's build your starting point.</h2>
-  <form id="assessment">
-   <label>Country<select id="country"><option>Bangladesh</option><option>Saudi Arabia</option><option>United States</option><option>United Kingdom</option><option>United Arab Emirates</option><option>Other</option></select></label>
-   <label>Preferred language<select><option>English</option><option>বাংলা</option><option>العربية</option><option>Español</option><option>हिन्दी</option></select></label>
-   <label>Budget<input id="budget" placeholder="e.g. $500"></label>
-   <label>Skills / experience<textarea id="skills" placeholder="What can you do? What have you worked with?"></textarea></label>
-   <label>What do you want to build?<textarea id="goal" placeholder="e.g. An online clothing business"></textarea></label>
-   <button class="btn full" type="submit">Generate my roadmap →</button>
-  </form>
-  <div id="result" class="result"></div>
- </div>
-</div>
-<script src="app.js"></script>
-</body>
-</html>
+            <header class="top-header">
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Open Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <h1 id="pageTitle">Dashboard</h1>
+
+                <div class="user-profile">
+                    <span class="status-indicator"></span>
+                    <span class="user-name">Workspace User</span>
+                </div>
+
+            </header>
+
+
+            <div class="content-body">
+
+                <!-- 1. Dashboard Tab -->
+                <section id="dashboardTab" class="tab-pane active">
+
+                    <div class="welcome-banner">
+                        <h2>Welcome back to BizPilot AI V2</h2>
+                        <p>
+                            Manage your entire business ecosystem from one intelligent command center.
+                        </p>
+                    </div>
+
+                    <div class="stats-grid">
+
+                        <div class="stat-card">
+                            <h3>Total API Requests</h3>
+                            <p class="stat-value" id="statQueries">0</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <h3>Worker Status</h3>
+                            <p class="stat-value status-online">Connected</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <h3>Active Modules</h3>
+                            <p class="stat-value">11 Enabled</p>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- 2. Business Plan Generator Tab -->
+                <section id="businessPlanTab" class="tab-pane">
+
+                    <div class="module-card">
+
+                        <h2>Business Plan Generator</h2>
+
+                        <p>
+                            Generate comprehensive, structured business plans tailored
+                            to your specific market sector using your Cloudflare Worker backend.
+                        </p>
+
+                        <div class="module-form-group">
+
+                            <input
+                                type="text"
+                                id="businessIdeaInput"
+                                placeholder="e.g., Sustainable packaging startup for e-commerce"
+                            >
+
+                            <button
+                                class="action-btn"
+                                id="generatePlanBtn"
+                            >
+                                Generate Business Plan
+                            </button>
+
+                        </div>
+
+                        <div
+                            class="module-output"
+                            id="businessPlanOutput"
+                        >
+                            Your generated business plan will appear here...
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- 3. Market Research Tab
