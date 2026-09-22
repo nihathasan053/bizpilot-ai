@@ -1,71 +1,164 @@
-function openApp(){
-  document.getElementById('app').style.display='block';
-  document.body.style.overflow='hidden';
-}
+/**
+ * BizPilot AI - Application Logic (V2 Complete)
+ * Fully wired frontend for all 11 modules connecting to the Cloudflare Worker endpoint.
+ * Preserves endpoint: https://bizpilot-ai.nihathasan053.workers.dev
+ */
 
-function closeApp(){
-  document.getElementById('app').style.display='none';
-  document.body.style.overflow='auto';
-}
+const WORKER_ENDPOINT = "https://bizpilot-ai.nihathasan053.workers.dev";
 
-document.getElementById('assessment').addEventListener('submit', async function(e){
-  e.preventDefault();
+document.addEventListener("DOMContentLoaded", () => {
 
-  const country = document.getElementById('country').value;
-  const budget = document.getElementById('budget').value;
-  const goal = document.getElementById('goal').value;
-  const skills = document.getElementById('skills').value;
+    // 1. State Management & Initialization
+    let preferredLanguage =
+        localStorage.getItem("preferredLanguage") || "en";
 
-  const r = document.getElementById('result');
+    let queryCount =
+        parseInt(localStorage.getItem("bizpilot_query_count") || "0", 10);
 
-  r.style.display = 'block';
-  r.innerHTML = '🤖 Creating your personalized AI roadmap...';
 
-  try {
-    const response = await fetch(
-      'https://bizpilot-ai.nihathasan053.workers.dev',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          country,
-          budget,
-          goal,
-          skills
-        })
-      }
-    );
+    // UI Elements - Navigation & Sidebar
+    const navItems = document.querySelectorAll(".nav-item");
+    const tabPanes = document.querySelectorAll(".tab-pane");
 
-    const data = await response.json();
+    const pageTitle =
+        document.getElementById("pageTitle");
 
-    if (!response.ok) {
-      throw new Error(data.error || 'AI request failed');
+    const menuToggle =
+        document.getElementById("menuToggle");
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const mobileCloseBtn =
+        document.getElementById("mobileCloseBtn");
+
+    const statQueries =
+        document.getElementById("statQueries");
+
+    const languageSelect =
+        document.getElementById("languageSelect");
+
+
+    // Initialize Dashboard Query Count
+    if (statQueries) {
+        statQueries.textContent = queryCount;
     }
 
-    r.innerHTML = `
-      <strong>Your AI Business Roadmap</strong>
-      <br><br>
-      ${data.answer.replace(/\n/g, '<br>')}
-    `;
 
-  } catch (error) {
-    r.innerHTML = `
-      <strong>Something went wrong.</strong>
-      <br><br>
-      ${error.message}
-    `;
-  }
+    // Initialize Language Selector
+    if (languageSelect) {
 
-  r.scrollIntoView({
-    behavior:'smooth',
-    block:'nearest'
-  });
-});
+        languageSelect.value = preferredLanguage;
 
-window.addEventListener('click', function(e){
-  if(e.target.id === 'app'){
-    closeApp();
-  }
-});
+        languageSelect.addEventListener("change", (e) => {
+
+            preferredLanguage = e.target.value;
+
+            localStorage.setItem(
+                "preferredLanguage",
+                preferredLanguage
+            );
+
+        });
+    }
+
+
+    // 2. Navigation Tab Switching
+    navItems.forEach(item => {
+
+        item.addEventListener("click", () => {
+
+            const targetTab =
+                item.getAttribute("data-tab");
+
+            if (!targetTab) return;
+
+
+            navItems.forEach(nav =>
+                nav.classList.remove("active")
+            );
+
+            tabPanes.forEach(pane =>
+                pane.classList.remove("active")
+            );
+
+
+            item.classList.add("active");
+
+
+            const activePane =
+                document.getElementById(`${targetTab}Tab`);
+
+            if (activePane) {
+                activePane.classList.add("active");
+            }
+
+
+            if (pageTitle) {
+                pageTitle.textContent =
+                    item.textContent.trim();
+            }
+
+
+            // Close sidebar on mobile upon navigation
+            if (
+                window.innerWidth <= 768 &&
+                sidebar
+            ) {
+                sidebar.classList.remove("open");
+            }
+
+        });
+
+    });
+
+
+    // Mobile Sidebar Toggles
+    if (menuToggle && sidebar) {
+
+        menuToggle.addEventListener("click", () => {
+            sidebar.classList.add("open");
+        });
+
+    }
+
+
+    if (mobileCloseBtn && sidebar) {
+
+        mobileCloseBtn.addEventListener("click", () => {
+            sidebar.classList.remove("open");
+        });
+
+    }
+
+
+    // 3. Reusable AI Worker Call Function
+    // with Request Lock & Error Handling
+
+    let isRequestInProgress = false;
+
+
+    async function callAI(promptText) {
+
+        if (isRequestInProgress) return null;
+
+        isRequestInProgress = true;
+
+
+        // Increment query count
+        queryCount++;
+
+        localStorage.setItem(
+            "bizpilot_query_count",
+            queryCount
+        );
+
+
+        if (statQueries) {
+            statQueries.textContent = queryCount;
+        }
+
+
+        try {
+
+            const response =
