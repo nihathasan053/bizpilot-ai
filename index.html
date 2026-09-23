@@ -283,6 +283,391 @@
 
             </section>
 
+<!-- 3. MARKET RESEARCH -->
+<section id="marketResearchTab" class="tab-pane">
 
-            <!-- 3. MARKET RESEARCH -->
-            <
+    <div class="module-card">
+
+        <h2>Market Research</h2>
+
+        <p>
+            Analyze customers, competitors, trends,
+            opportunities and risks.
+        </p>
+
+        <div class="module-form-group">
+
+            <input
+                type="text"
+                id="marketResearchInput"
+                placeholder="e.g. Online clothing business in Saudi Arabia"
+            >
+
+            <button
+                class="action-btn"
+                id="runMarketResearchBtn"
+                type="button"
+            >
+                Run Market Research
+            </button>
+
+        </div>
+
+        <div
+            class="module-output"
+            id="marketResearchOutput"
+        >
+            Your market research will appear here...
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- 4. FINANCIAL PLANNER -->
+<section id="financialPlannerTab" class="tab-pane">
+
+    <div class="module-card">
+
+        <h2>Financial Planner</h2>
+
+        <p>
+            Create financial projections and break-even estimates.
+        </p>
+
+        <div class="module-form-group">
+
+            <input
+                type="text"
+                id="financialQueryInput"
+                placeholder="e.g. Budget $5000, expected monthly sales $3000"
+            >
+
+            <button
+                class="action-btn"
+                id="runFinancialPlanBtn"
+                type="button"
+            >
+                Create Financial Plan
+            </button>
+
+        </div>
+
+        <div
+            class="module-output"
+            id="financialPlannerOutput"
+        >
+            Your financial plan will appear here...
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- 5. AI BUSINESS COACH -->
+<section id="aiCoachTab" class="tab-pane">
+
+    <div class="module-card">
+
+        <h2>AI Business Coach</h2>
+
+        <p>
+            Get practical guidance for your business challenges.
+        </p>
+
+        <div class="module-form-group">
+
+            <input
+                type="text"
+                id="coachQueryInput"
+                placeholder="Describe your business challenge"
+            >
+
+            <button
+                class="action-btn"
+                id="askCoachBtn"
+                type="button"
+            >
+                Ask AI Coach
+            </button>
+
+        </div>
+
+        <div
+            class="module-output"
+            id="aiCoachOutput"
+        >
+            Your AI coaching response will appear here...
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- 6. WEBSITE BUILDER -->
+<section id="websiteBuilderTab" class="tab-pane">
+
+    <div class="module-card">
+
+        <h2>Website Builder</h2>
+
+        <p>
+            Generate website structure and professional copy.
+        </p>
+
+        <div class="module-form-group">
+
+            <input
+                type="text"
+                id="websiteQueryInput"
+                placeholder="e.g. SaaS website for an AI startup"
+            >
+
+            <button
+                class="action-btn"
+                id="generateWebsiteCopyBtn"
+                type="button"
+            >
+                Generate Website Copy
+            </button>
+
+        </div>
+
+        <div
+            class="module-output"
+            id="websiteBuilderOutput"
+        >
+            Your website content will appear here...
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- 7. MARKETING ASSISTANT -->
+<section id="marketingAssistantTab" class="tab-pane">
+
+    <div class="module-card">
+
+        <h2>Marketing Assistant</h2>
+
+        <p>
+            Create marketing ideas, ads and social media content.
+        </p>
+
+        <div class="module-form-group">
+
+            <input
+                type="text"
+                id="marketingQueryInput"
+                placeholder="e.g. Launch campaign for a clothing brand"
+            >
+
+            <button
+                class="action-btn"
+                id="generateMarketingBtn"
+                type="button"
+            >
+                Generate Marketing Plan
+            </button>
+
+        </div>
+
+        <div
+            class="module-output"
+            id="marketingAssistantOutput"
+        >
+            Your marketing plan will appear here...
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- 8. AI ASSISTANT -->
+<section id="assistantTab" class="tab-pane">
+
+    <div class="module-card">
+
+        <h2>AI Assistant</h2>
+
+        <div
+            id="chatMessages"
+            class="chat-messages"
+        >
+
+            <div class="message ai-message">
+                <div class="message-content">
+                    Hello! I'm your BizPilot AI assistant.
+                    How can I help?
+                </div>
+            </div>
+
+        </div>
+
+        <form id="chatForm">
+
+            <input
+                type="text"
+                id="userInput"
+                placeholder="Ask anything about your business..."
+            >
+
+            <button
+                class="action-btn"
+                type="submit"
+            >
+                Send
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- 9. ANALYTICS -->
+<section id="analyticsTab" class="tab-pane">
+
+    <div class="module-card">
+
+        <h2>Analytics</h2>
+
+        <div class="analytics-metrics-grid">
+
+            <div class="metric-box">
+                <span>API Requests</span>
+                <strong id="analyticsQueries">0</strong>
+            </div>
+
+            <div class="metric-box">
+                <span>Active Modules</span>
+                <strong>11</strong>
+            </div>
+
+            <div class="metric-box">
+                <span>Status</span>
+                <strong>Connected</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- 10. PRICING -->
+<section id="pricingTab" class="tab-pane">
+
+    <div class="pricing-container">
+
+        <h2>Choose Your Plan</h2>
+
+        <div class="pricing-grid">
+
+            <div class="pricing-card">
+
+                <h3>Free</h3>
+
+                <div class="price">
+                    $0
+                    <small>/month</small>
+                </div>
+
+                <p>
+                    Explore BizPilot AI.
+                </p>
+
+                <button
+                    class="action-btn secondary"
+                    type="button"
+                >
+                    Current Plan
+                </button>
+
+            </div>
+
+
+            <div class="pricing-card featured">
+
+                <h3>Pro Enterprise</h3>
+
+                <div class="price">
+                    $49
+                    <small>/month</small>
+                </div>
+
+                <p>
+                    Advanced AI business tools.
+                </p>
+
+                <button
+                    class="action-btn"
+                    type="button"
+                >
+                    Upgrade
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- 11. SETTINGS -->
+<section id="settingsTab" class="tab-pane">
+
+    <div class="module-card">
+
+        <h2>Settings</h2>
+
+        <div class="form-group">
+
+            <label for="languageSelect">
+                Preferred Language
+            </label>
+
+            <select id="languageSelect">
+
+                <option value="en">
+                    English
+                </option>
+
+                <option value="bn">
+                    বাংলা
+                </option>
+
+                <option value="ar">
+                    العربية
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</div>
+
+</main>
+
+</div>
+
+
+<script src="./script.js"></script>
+
+</body>
+</html>
