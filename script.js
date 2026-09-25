@@ -1,696 +1,231 @@
-/**
- * BizPilot AI
- * Complete frontend application logic
- * Preserves Cloudflare Worker endpoint
- */
-
-const WORKER_ENDPOINT =
-  "https://bizpilot-ai.nihathasan053.workers.dev";
-
-document.addEventListener("DOMContentLoaded", () => {
-  "use strict";
-
-  /* =========================
-     GLOBAL STATE
-  ========================= */
-
-  const state = {
-    language: localStorage.getItem("preferredLanguage") || "English",
-    queryCount: Number(localStorage.getItem("bizpilot_query_count") || 0)
-  };
-
-  /* =========================
-     HELPERS
-  ========================= */
-
-  function $(selector) {
-    return document.querySelector(selector);
-  }
-
-  function $$(selector) {
-    return Array.from(document.querySelectorAll(selector));
-  }
-
-  function escapeHTML(value) {
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-
-  function setText(element, text) {
-    if (element) element.textContent = text;
-  }
-
-  function saveState() {
-    localStorage.setItem(
-      "preferredLanguage",
-      state.language
-    );
-
-    localStorage.setItem(
-      "bizpilot_query_count",
-      String(state.queryCount)
-    );
-  }
-
-  function findElement(selectors) {
-    for (const selector of selectors) {
-      const element = $(selector);
-      if (element) return element;
-    }
-    return null;
-  }
-
-  /* =========================
-     INITIALIZE
-  ========================= */
-
-  initializeNavigation();
-  initializeLanguage();
-  initializeBusinessPlan();
-  initializeGenericTools();
-  initializeSettings();
-  updateUsageDisplay();
-
-  /* =========================
-     NAVIGATION
-  ========================= */
-
-  function initializeNavigation() {
-    const navItems = $$(
-      "[data-tab], .nav-item, .sidebar-item, .menu-item"
-    );
-
-    navItems.forEach((item) => {
-      item.addEventListener("click", (event) => {
-        event.preventDefault();
-
-        const target =
-          item.dataset.tab ||
-          item.dataset.target ||
-          item.getAttribute("href")?.replace("#", "");
-
-        if (!target) return;
-
-        switchTab(target);
-
-        navItems.forEach((nav) =>
-          nav.classList.remove("active")
-        );
-
-        item.classList.add("active");
-      });
-    });
-  }
-
-  function switchTab(target) {
-    const normalized = String(target)
-      .toLowerCase()
-      .replace(/\s+/g, "-");
-
-    const sections = $$(
-      ".tab-content, .page-section, .content-section, [data-section]"
-    );
-
-    let found = false;
-
-    sections.forEach((section) => {
-      const id = String(section.id || "")
-        .toLowerCase();
-
-      const dataSection = String(
-        section.dataset.section || ""
-      ).toLowerCase();
-
-      const matches =
-        id === normalized ||
-        dataSection === normalized ||
-        id === normalized.replace("-tab", "");
-
-      if (matches) {
-        section.style.display = "";
-        section.classList.add("active");
-        found = true;
-      } else {
-        section.style.display = "none";
-        section.classList.remove("active");
-      }
-    });
-
-    if (!found) {
-      const direct =
-        document.getElementById(target) ||
-        document.getElementById(normalized);
-
-      if (direct) {
-        direct.style.display = "";
-        direct.classList.add("active");
-      }
-    }
-  }
-
-  /* =========================
-     LANGUAGE
-  ========================= */
-
-  function initializeLanguage() {
-    const selectors = $$(
-      "#languageSelect, #language-selector, select[name='language']"
-    );
-
-    selectors.forEach((select) => {
-      select.value = state.language;
-
-      select.addEventListener("change", () => {
-        state.language = select.value;
-        saveState();
-
-        selectors.forEach((other) => {
-          other.value = state.language;
-        });
-      });
-    });
-  }
-
-  /* =========================
-     BUSINESS PLAN GENERATOR
-  ========================= */
-
-  function initializeBusinessPlan() {
-    const input = findElement([
-      "#businessIdea",
-      "#business-idea",
-      "#businessInput",
-      "#ideaInput",
-      "textarea[placeholder*='business']",
-      "textarea"
-    ]);
-
-    const button = findElement([
-      "#generateBusinessPlan",
-      "#generate-business-plan",
-      "#generatePlan",
-      ".generate-business-plan",
-      "button"
-    ]);
-
-    if (!input || !button) return;
-
-    /*
-     * Only attach to the correct generator button.
-     * Avoid hijacking unrelated buttons.
-     */
-    let generateButton = button;
-
-    const candidates = $$("button");
-
-    const specific = candidates.find((btn) => {
-      const text = btn.textContent.toLowerCase();
-
-      return (
-        text.includes("generate business plan") ||
-        text.includes("generate plan")
-      );
-    });
-
-    if (specific) {
-      generateButton = specific;
-    }
-
-    generateButton.addEventListener("click", async (event) => {
-      event.preventDefault();
-
-      const idea = input.value.trim();
-
-      if (!idea) {
-        showGeneratorMessage(
-          "Please enter a business idea first.",
-          "error"
-        );
-        input.focus();
-        return;
-      }
-
-      await generateBusinessPlan(idea);
-    });
-  }
-
-  async function generateBusinessPlan(idea) {
-    const resultBox = findElement([
-      "#businessPlanResult",
-      "#business-plan-result",
-      "#generatedBusinessPlan",
-      "#generated-business-plan",
-      ".business-plan-result",
-      ".generated-result",
-      ".result-box"
-    ]);
-
-    const button = findElement([
-      "#generateBusinessPlan",
-      "#generate-business-plan",
-      "#generatePlan"
-    ]);
-
-    if (button) {
-      button.disabled = true;
-      button.textContent = "Generating...";
-    }
-
-    if (resultBox) {
-      resultBox.style.display = "";
-      resultBox.textContent =
-        "Generating your business plan...";
-    }
-
-    try {
-      /*
-       * Try the existing Worker API first.
-       */
-      const response = await fetch(WORKER_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          action: "business_plan",
-          type: "business_plan",
-          prompt: idea,
-          businessIdea: idea,
-          query: idea,
-          language: state.language
-        })
-      });
-
-      const rawText = await response.text();
-
-      let data = null;
-
-      try {
-        data = JSON.parse(rawText);
-      } catch {
-        data = {
-          text: rawText
-        };
-      }
-
-      if (!response.ok) {
-        throw new Error(
-          data?.error ||
-          data?.message ||
-          `API error: ${response.status}`
-        );
-      }
-
-      const generatedText = extractGeneratedText(data);
-
-      if (!generatedText) {
-        throw new Error(
-          "The AI API returned an empty response."
-        );
-      }
-
-      state.queryCount += 1;
-      saveState();
-      updateUsageDisplay();
-
-      displayBusinessPlan(
-        resultBox,
-        generatedText,
-        idea
-      );
-    } catch (error) {
-      console.error("BizPilot AI error:", error);
-
-      /*
-       * Important:
-       * Never leave the user with only the original
-       * placeholder. Show a useful error message.
-       */
-      if (resultBox) {
-        resultBox.innerHTML = `
-          <div class="bp-error">
-            <h3>Unable to generate the AI plan</h3>
-            <p>${escapeHTML(error.message)}</p>
-            <p>
-              Check that the Cloudflare Worker is running
-              and that its AI/API key has available credits.
-            </p>
-          </div>
-        `;
-      }
-    } finally {
-      if (button) {
-        button.disabled = false;
-        button.textContent = "Generate Business Plan";
-      }
-    }
-  }
-
-  function extractGeneratedText(data) {
-    if (!data) return "";
-
-    const possibleValues = [
-      data.text,
-      data.output,
-      data.response,
-      data.result,
-      data.content,
-      data.answer,
-      data.message,
-      data.generatedText,
-      data.plan,
-      data.businessPlan,
-      data.data?.text,
-      data.data?.output,
-      data.data?.response,
-      data.data?.content,
-      data.data?.answer,
-      data.choices?.[0]?.message?.content,
-      data.choices?.[0]?.text
+document.addEventListener('DOMContentLoaded', () => {
+    const WORKER_URL = 'https://bizpilot-ai.nihathasan053.workers.dev';
+
+    // 1. Sidebar Navigation
+    const navItems = document.querySelectorAll('[data-tab]');
+    const allTabIds = [
+        'dashboardTab', 'businessPlanTab', 'marketResearchTab', 
+        'financialPlannerTab', 'aiCoachTab', 'websiteBuilderTab', 
+        'marketingAssistantTab', 'assistantTab', 'analyticsTab', 
+        'pricingTab', 'settingsTab'
     ];
 
-    for (const value of possibleValues) {
-      if (
-        typeof value === "string" &&
-        value.trim()
-      ) {
-        return value.trim();
-      }
-    }
-
-    return "";
-  }
-
-  function displayBusinessPlan(
-    resultBox,
-    text,
-    idea
-  ) {
-    if (!resultBox) {
-      console.warn(
-        "Business plan result element not found."
-      );
-      return;
-    }
-
-    const formatted = formatAIText(text);
-
-    resultBox.innerHTML = `
-      <div class="bp-result">
-        <div class="bp-result-header">
-          <h2>Generated Business Plan</h2>
-          <p>
-            Business idea:
-            <strong>${escapeHTML(idea)}</strong>
-          </p>
-        </div>
-
-        <div class="bp-result-body">
-          ${formatted}
-        </div>
-      </div>
-    `;
-
-    resultBox.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }
-
-  function showGeneratorMessage(message, type) {
-    const resultBox = findElement([
-      "#businessPlanResult",
-      "#business-plan-result",
-      "#generatedBusinessPlan",
-      "#generated-business-plan",
-      ".business-plan-result",
-      ".generated-result",
-      ".result-box"
-    ]);
-
-    if (!resultBox) return;
-
-    resultBox.innerHTML = `
-      <div class="bp-message ${escapeHTML(type)}">
-        ${escapeHTML(message)}
-      </div>
-    `;
-  }
-
-  function formatAIText(text) {
-    const safe = escapeHTML(text);
-
-    return safe
-      .split(/\n{2,}/)
-      .map((paragraph) => {
-        const trimmed = paragraph.trim();
-
-        if (!trimmed) return "";
-
-        if (/^#{1,3}\s/.test(trimmed)) {
-          const title = trimmed.replace(/^#{1,3}\s/, "");
-          return `<h3>${title}</h3>`;
-        }
-
-        if (/^[-*]\s/.test(trimmed)) {
-          const items = trimmed
-            .split("\n")
-            .map((line) =>
-              line.replace(/^[-*]\s/, "").trim()
-            )
-            .filter(Boolean)
-            .map((item) => `<li>${item}</li>`)
-            .join("");
-
-          return `<ul>${items}</ul>`;
-        }
-
-        return `<p>${trimmed.replace(/\n/g, "<br>")}</p>`;
-      })
-      .join("");
-  }
-
-  /* =========================
-     GENERIC AI TOOLS
-  ========================= */
-
-  function initializeGenericTools() {
-    $$("button").forEach((button) => {
-      if (button.dataset.bizpilotBound === "true") {
-        return;
-      }
-
-      const text = button.textContent
-        .trim()
-        .toLowerCase();
-
-      if (
-        text.includes("market research") ||
-        text.includes("financial plan") ||
-        text.includes("marketing") ||
-        text.includes("business coach") ||
-        text.includes("ai assistant") ||
-        text.includes("website")
-      ) {
-        button.dataset.bizpilotBound = "true";
-
-        button.addEventListener("click", () => {
-          handleGenericTool(button, text);
+    function switchTab(tabName) {
+        allTabIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                if (id === tabName + 'Tab') {
+                    el.style.display = 'block';
+                    el.classList.add('active');
+                } else {
+                    el.style.display = 'none';
+                    el.classList.remove('active');
+                }
+            }
         });
-      }
+
+        navItems.forEach(nav => {
+            if (nav.getAttribute('data-tab') === tabName) {
+                nav.classList.add('active');
+            } else {
+                nav.classList.remove('active');
+            }
+        });
+    }
+
+    navItems.forEach(nav => {
+        nav.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tabName = nav.getAttribute('data-tab');
+            if (tabName) {
+                switchTab(tabName);
+            }
+        });
     });
-  }
 
-  async function handleGenericTool(button, buttonText) {
-    const input = findElement([
-      "textarea:focus",
-      "input:focus",
-      "#businessIdea",
-      "#business-idea"
-    ]);
+    // Default to Dashboard on load
+    switchTab('dashboard');
 
-    const value = input?.value?.trim();
-
-    if (!value) {
-      showTemporaryMessage(
-        "Enter your business idea or question first."
-      );
-      return;
+    // Helper to get current language
+    function getCurrentLanguage() {
+        const langSelect = document.getElementById('languageSelect');
+        return langSelect ? langSelect.value : 'en';
     }
 
-    const originalText = button.textContent;
+    // Safe Worker API Caller with proper payload format
+    async function callWorker(action, promptText) {
+        const response = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: action,
+                prompt: promptText,
+                language: getCurrentLanguage()
+            })
+        });
 
-    button.disabled = true;
-    button.textContent = "Working...";
-
-    try {
-      const response = await fetch(WORKER_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          action: "assistant",
-          type: "assistant",
-          prompt: `${buttonText}: ${value}`,
-          query: value,
-          language: state.language
-        })
-      });
-
-      const raw = await response.text();
-
-      let data;
-
-      try {
-        data = JSON.parse(raw);
-      } catch {
-        data = { text: raw };
-      }
-
-      if (!response.ok) {
-        throw new Error(
-          data?.error ||
-          data?.message ||
-          `Request failed: ${response.status}`
-        );
-      }
-
-      const text = extractGeneratedText(data);
-
-      if (!text) {
-        throw new Error("No AI response was returned.");
-      }
-
-      state.queryCount += 1;
-      saveState();
-      updateUsageDisplay();
-
-      showTemporaryMessage(text);
-    } catch (error) {
-      console.error(error);
-
-      showTemporaryMessage(
-        `AI request failed: ${error.message}`
-      );
-    } finally {
-      button.disabled = false;
-      button.textContent = originalText;
-    }
-  }
-
-  function showTemporaryMessage(message) {
-    let box = $("#bizpilot-toast");
-
-    if (!box) {
-      box = document.createElement("div");
-      box.id = "bizpilot-toast";
-
-      Object.assign(box.style, {
-        position: "fixed",
-        right: "20px",
-        bottom: "20px",
-        maxWidth: "420px",
-        padding: "16px",
-        background: "#111827",
-        color: "#ffffff",
-        borderRadius: "10px",
-        zIndex: "99999",
-        whiteSpace: "pre-wrap",
-        boxShadow: "0 10px 30px rgba(0,0,0,.3)"
-      });
-
-      document.body.appendChild(box);
-    }
-
-    box.textContent = message;
-    box.style.display = "block";
-
-    clearTimeout(box._timer);
-
-    box._timer = setTimeout(() => {
-      box.style.display = "none";
-    }, 8000);
-  }
-
-  /* =========================
-     USAGE
-  ========================= */
-
-  function updateUsageDisplay() {
-    const elements = $$(
-      "#queryCount, #usageCount, .query-count, .usage-count"
-    );
-
-    elements.forEach((element) => {
-      element.textContent = String(state.queryCount);
-    });
-  }
-
-  /* =========================
-     SETTINGS
-  ========================= */
-
-  function initializeSettings() {
-    const saveButtons = $$(
-      "#saveSettings, .save-settings, button"
-    );
-
-    saveButtons.forEach((button) => {
-      const text = button.textContent
-        .trim()
-        .toLowerCase();
-
-      if (!text.includes("save settings")) {
-        return;
-      }
-
-      button.addEventListener("click", () => {
-        const language = findElement([
-          "#languageSelect",
-          "#language-selector",
-          "select[name='language']"
-        ]);
-
-        if (language) {
-          state.language = language.value;
+        if (!response.ok) {
+            throw new Error(`Worker returned status ${response.status}: ${response.statusText}`);
         }
 
-        saveState();
-
-        showTemporaryMessage(
-          "Settings saved successfully."
-        );
-      });
-    });
-  }
-
-  /* =========================
-     GLOBAL ERROR HANDLING
-  ========================= */
-
-  window.addEventListener("error", (event) => {
-    console.error(
-      "BizPilot AI frontend error:",
-      event.error || event.message
-    );
-  });
-
-  window.addEventListener(
-    "unhandledrejection",
-    (event) => {
-      console.error(
-        "BizPilot AI promise error:",
-        event.reason
-      );
+        const data = await response.json();
+        return data.output || data.response || data.result || data.message || JSON.stringify(data);
     }
-  );
 
-  console.log(
-    "BizPilot AI initialized successfully."
-  );
+    // Safe output renderer using textContent to prevent unsafe innerHTML injection
+    function renderOutput(outputEl, text, isError = false) {
+        if (!outputEl) return;
+        outputEl.innerHTML = '';
+        const wrapper = document.createElement('div');
+        wrapper.style.padding = '12px';
+        wrapper.style.borderRadius = '6px';
+        wrapper.style.marginTop = '10px';
+        wrapper.style.lineHeight = '1.6';
+
+        if (isError) {
+            wrapper.style.background = 'rgba(239, 68, 68, 0.1)';
+            wrapper.style.color = '#ef4444';
+            wrapper.textContent = `Error: ${text}`;
+        } else {
+            wrapper.style.background = 'rgba(16, 185, 129, 0.05)';
+            wrapper.style.color = 'inherit';
+            wrapper.textContent = text;
+        }
+        outputEl.appendChild(wrapper);
+    }
+
+    // Generic module runner with button state protection and safe error handling
+    async function handleModule(buttonId, inputId, outputId, actionName, loadingText) {
+        const btn = document.getElementById(buttonId);
+        const input = document.getElementById(inputId);
+        const output = document.getElementById(outputId);
+
+        if (!btn || !input || !output) return;
+
+        const originalText = btn.textContent;
+        const promptText = input.value.trim();
+
+        if (!promptText) {
+            renderOutput(output, 'Please enter a query or description first.', true);
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = loadingText;
+        renderOutput(output, 'Processing request...');
+
+        try {
+            const result = await callWorker(actionName, promptText);
+            renderOutput(output, result, false);
+        } catch (err) {
+            renderOutput(output, err.message || 'An unexpected error occurred.', true);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = originalText;
+        }
+    }
+
+    // 1. Business Plan Generator
+    const generatePlanBtn = document.getElementById('generatePlanBtn');
+    if (generatePlanBtn) {
+        generatePlanBtn.addEventListener('click', () => {
+            handleModule('generatePlanBtn', 'businessIdeaInput', 'businessPlanOutput', 'businessPlan', 'Generating Plan...');
+        });
+    }
+
+    // 2. Market Research
+    const runMarketResearchBtn = document.getElementById('runMarketResearchBtn');
+    if (runMarketResearchBtn) {
+        runMarketResearchBtn.addEventListener('click', () => {
+            handleModule('runMarketResearchBtn', 'marketResearchInput', 'marketResearchOutput', 'marketResearch', 'Researching...');
+        });
+    }
+
+    // 3. Financial Planner
+    const runFinancialPlanBtn = document.getElementById('runFinancialPlanBtn');
+    if (runFinancialPlanBtn) {
+        runFinancialPlanBtn.addEventListener('click', () => {
+            handleModule('runFinancialPlanBtn', 'financialQueryInput', 'financialPlannerOutput', 'financialPlanner', 'Analyzing...');
+        });
+    }
+
+    // 4. AI Coach
+    const askCoachBtn = document.getElementById('askCoachBtn');
+    if (askCoachBtn) {
+        askCoachBtn.addEventListener('click', () => {
+            handleModule('askCoachBtn', 'coachQueryInput', 'aiCoachOutput', 'aiCoach', 'Consulting...');
+        });
+    }
+
+    // 5. Website Builder
+    const generateWebsiteCopyBtn = document.getElementById('generateWebsiteCopyBtn');
+    if (generateWebsiteCopyBtn) {
+        generateWebsiteCopyBtn.addEventListener('click', () => {
+            handleModule('generateWebsiteCopyBtn', 'websiteQueryInput', 'websiteBuilderOutput', 'websiteBuilder', 'Generating Copy...');
+        });
+    }
+
+    // 6. Marketing Assistant
+    const generateMarketingBtn = document.getElementById('generateMarketingBtn');
+    if (generateMarketingBtn) {
+        generateMarketingBtn.addEventListener('click', () => {
+            handleModule('generateMarketingBtn', 'marketingQueryInput', 'marketingAssistantOutput', 'marketingAssistant', 'Generating Strategy...');
+        });
+    }
+
+    // 7. Assistant Chat
+    const chatForm = document.getElementById('chatForm');
+    const userInput = document.getElementById('userInput');
+    const chatMessages = document.getElementById('chatMessages');
+
+    if (chatForm && userInput && chatMessages) {
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // Append user message securely
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.style.margin = '8px 0';
+            userMsgDiv.style.textAlign = 'right';
+            const userSpan = document.createElement('span');
+            userSpan.style.background = '#3b82f6';
+            userSpan.style.color = 'white';
+            userSpan.style.padding = '8px 12px';
+            userSpan.style.borderRadius = '8px';
+            userSpan.style.display = 'inline-block';
+            userSpan.textContent = text;
+            userMsgDiv.appendChild(userSpan);
+            chatMessages.appendChild(userMsgDiv);
+
+            userInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const result = await callWorker('assistant', text);
+                const aiMsgDiv = document.createElement('div');
+                aiMsgDiv.style.margin = '8px 0';
+                aiMsgDiv.style.textAlign = 'left';
+                const aiSpan = document.createElement('span');
+                aiSpan.style.background = '#1f2937';
+                aiSpan.style.color = 'white';
+                aiSpan.style.padding = '8px 12px';
+                aiSpan.style.borderRadius = '8px';
+                aiSpan.style.display = 'inline-block';
+                aiSpan.textContent = result;
+                aiMsgDiv.appendChild(aiSpan);
+                chatMessages.appendChild(aiMsgDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } catch (err) {
+                const errorMsgDiv = document.createElement('div');
+                errorMsgDiv.style.margin = '8px 0';
+                errorMsgDiv.style.color = '#ef4444';
+                errorMsgDiv.textContent = `Error: ${err.message}`;
+                chatMessages.appendChild(errorMsgDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+    }
 });
