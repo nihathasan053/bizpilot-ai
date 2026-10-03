@@ -529,7 +529,7 @@ button {
 }
 
 /* TABLET */
-@media (max-width: 1000px) {
+@media (max-width: 900) {
     .sidebar {
         width: 230px;
     }
