@@ -1,669 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>BizPilot AI - Intelligent Business Assistant</title>
-
-    <meta
-        name="description"
-        content="BizPilot AI - AI-powered business planning and business assistant."
-    >
-
-    <link rel="stylesheet" href="style.css">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet"
-    >
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BizPilot AI - Intelligent business assistant">
+  <title>BizPilot AI</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="app-container">
+  <div class="app">
 
-    <!-- SIDEBAR -->
+    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
 
-        <div class="sidebar-header">
-            <h2>BizPilot AI</h2>
+      <div class="sidebar-top">
 
-            <button
-                class="mobile-close-btn"
-                id="mobileCloseBtn"
-                aria-label="Close Menu"
-            >
-                &times;
-            </button>
-        </div>
+        <button class="brand" id="brandBtn">
+          <span class="brand-mark">B</span>
+          <span>BizPilot</span>
+        </button>
 
-        <nav class="sidebar-nav">
+        <button class="new-chat" id="newChatBtn">
+          <span>＋</span>
+          <span>New chat</span>
+        </button>
 
-            <button
-                class="nav-item active"
-                data-tab="dashboard"
-            >
-                Dashboard
-            </button>
+      </div>
 
-            <button
-                class="nav-item"
-                data-tab="businessPlan"
-            >
-                Business Plan Generator
-            </button>
+      <!-- Chat History -->
+      <div class="history">
 
-            <button
-                class="nav-item"
-                data-tab="marketResearch"
-            >
-                Market Research
-            </button>
+        <div class="history-label">Recent</div>
 
-            <button
-                class="nav-item"
-                data-tab="financialPlanner"
-            >
-                Financial Planner
-            </button>
+        <button class="history-item active">
+          Business strategy
+        </button>
 
-            <button
-                class="nav-item"
-                data-tab="aiCoach"
-            >
-                AI Business Coach
-            </button>
+        <button class="history-item">
+          Marketing plan
+        </button>
 
-            <button
-                class="nav-item"
-                data-tab="websiteBuilder"
-            >
-                Website Builder
-            </button>
+        <button class="history-item">
+          Sales analysis
+        </button>
 
-            <button
-                class="nav-item"
-                data-tab="marketingAssistant"
-            >
-                Marketing Assistant
-            </button>
+      </div>
 
-            <button
-                class="nav-item"
-                data-tab="assistant"
-            >
-                AI Assistant
-            </button>
+      <!-- Bottom -->
+      <div class="sidebar-bottom">
 
-            <button
-                class="nav-item"
-                data-tab="analytics"
-            >
-                Analytics
-            </button>
+        <button class="side-link">
+          ⚙
+          <span>Settings</span>
+        </button>
 
-            <button
-                class="nav-item"
-                data-tab="pricing"
-            >
-                Pricing / Upgrade
-            </button>
+        <button class="profile">
+          <span class="avatar">B</span>
+          <span class="profile-name">BizPilot User</span>
+          <span class="dots">•••</span>
+        </button>
 
-            <button
-                class="nav-item"
-                data-tab="settings"
-            >
-                Settings
-            </button>
-
-        </nav>
-
-        <div class="sidebar-footer">
-            <span class="version-tag">
-                v2.0.0 Enterprise
-            </span>
-        </div>
+      </div>
 
     </aside>
 
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
+    <!-- Main Area -->
+    <main class="main">
 
-        <!-- HEADER -->
-        <header class="top-header">
+      <!-- Top Bar -->
+      <header class="topbar">
 
-            <button
-                class="menu-toggle"
-                id="menuToggle"
-                aria-label="Open Menu"
-            >
-                <span></span>
-                <span></span>
-                <span></span>
+        <button
+          class="icon-btn mobile-only"
+          id="menuBtn"
+          aria-label="Open menu">
+          ☰
+        </button>
+
+        <button class="model-name" id="modelBtn">
+          BizPilot AI
+          <span>⌄</span>
+        </button>
+
+        <button
+          class="icon-btn"
+          id="newMobileBtn"
+          aria-label="New chat">
+          ✎
+        </button>
+
+      </header>
+
+
+      <!-- Chat -->
+      <section class="chat" id="chat">
+
+        <!-- Welcome -->
+        <div class="welcome" id="welcome">
+
+          <div class="welcome-logo">
+            B
+          </div>
+
+          <h1>
+            How can I help you today?
+          </h1>
+
+          <p>
+            Ask BizPilot about your business, strategy,
+            marketing, sales, or operations.
+          </p>
+
+
+          <!-- Suggestions -->
+          <div class="suggestions">
+
+            <button class="suggestion">
+              Create a business plan
             </button>
 
-            <h1 id="pageTitle">
-                Dashboard
-            </h1>
-
-            <div class="user-profile">
-
-                <span class="status-indicator"></span>
-
-                <span class="user-name">
-                    Workspace User
-                </span>
-
-            </div>
-
-        </header>
-
-
-        <!-- CONTENT -->
-        <div class="content-body">
-
-
-            <!-- 1. DASHBOARD -->
-            <section
-                id="dashboardTab"
-                class="tab-pane active"
-            >
-
-                <div class="welcome-banner">
-
-                    <h2>
-                        Welcome back to BizPilot AI V2
-                    </h2>
-
-                    <p>
-                        Manage your entire business ecosystem
-                        from one intelligent command center.
-                    </p>
-
-                </div>
-
-
-                <div class="stats-grid">
-
-                    <div class="stat-card">
-
-                        <h3>
-                            Total API Requests
-                        </h3>
-
-                        <p
-                            class="stat-value"
-                            id="statQueries"
-                        >
-                            0
-                        </p>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <h3>
-                            Worker Status
-                        </h3>
-
-                        <p class="stat-value status-online">
-                            Connected
-                        </p>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <h3>
-                            Active Modules
-                        </h3>
-
-                        <p class="stat-value">
-                            11 Enabled
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- 2. BUSINESS PLAN -->
-            <section
-                id="businessPlanTab"
-                class="tab-pane"
-            >
-
-                <div class="module-card">
-
-                    <h2>
-                        Business Plan Generator
-                    </h2>
-
-                    <p>
-                        Generate comprehensive,
-                        structured business plans tailored
-                        to your specific market sector.
-                    </p>
-
-                    <div class="module-form-group">
-
-                        <input
-                            type="text"
-                            id="businessIdeaInput"
-                            placeholder="e.g., Sustainable packaging startup for e-commerce"
-                        >
-
-                        <button
-                            class="action-btn"
-                            id="generatePlanBtn"
-                        >
-                            Generate Business Plan
-                        </button>
-
-                    </div>
-
-                    <div
-                        class="module-output"
-                        id="businessPlanOutput"
-                    >
-                        Your generated business plan
-                        will appear here...
-                    </div>
-
-                </div>
-
-            </section>
-
-<!-- 3. MARKET RESEARCH -->
-<section id="marketResearchTab" class="tab-pane">
-
-    <div class="module-card">
-
-        <h2>Market Research</h2>
-
-        <p>
-            Analyze customers, competitors, trends,
-            opportunities and risks.
-        </p>
-
-        <div class="module-form-group">
-
-            <input
-                type="text"
-                id="marketResearchInput"
-                placeholder="e.g. Online clothing business in Saudi Arabia"
-            >
-
-            <button
-                class="action-btn"
-                id="runMarketResearchBtn"
-                type="button"
-            >
-                Run Market Research
+            <button class="suggestion">
+              Analyze my marketing
             </button>
 
-        </div>
-
-        <div
-            class="module-output"
-            id="marketResearchOutput"
-        >
-            Your market research will appear here...
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- 4. FINANCIAL PLANNER -->
-<section id="financialPlannerTab" class="tab-pane">
-
-    <div class="module-card">
-
-        <h2>Financial Planner</h2>
-
-        <p>
-            Create financial projections and break-even estimates.
-        </p>
-
-        <div class="module-form-group">
-
-            <input
-                type="text"
-                id="financialQueryInput"
-                placeholder="e.g. Budget $5000, expected monthly sales $3000"
-            >
-
-            <button
-                class="action-btn"
-                id="runFinancialPlanBtn"
-                type="button"
-            >
-                Create Financial Plan
+            <button class="suggestion">
+              Build a sales strategy
             </button>
 
-        </div>
-
-        <div
-            class="module-output"
-            id="financialPlannerOutput"
-        >
-            Your financial plan will appear here...
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- 5. AI BUSINESS COACH -->
-<section id="aiCoachTab" class="tab-pane">
-
-    <div class="module-card">
-
-        <h2>AI Business Coach</h2>
-
-        <p>
-            Get practical guidance for your business challenges.
-        </p>
-
-        <div class="module-form-group">
-
-            <input
-                type="text"
-                id="coachQueryInput"
-                placeholder="Describe your business challenge"
-            >
-
-            <button
-                class="action-btn"
-                id="askCoachBtn"
-                type="button"
-            >
-                Ask AI Coach
+            <button class="suggestion">
+              Give me business ideas
             </button>
 
-        </div>
-
-        <div
-            class="module-output"
-            id="aiCoachOutput"
-        >
-            Your AI coaching response will appear here...
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- 6. WEBSITE BUILDER -->
-<section id="websiteBuilderTab" class="tab-pane">
-
-    <div class="module-card">
-
-        <h2>Website Builder</h2>
-
-        <p>
-            Generate website structure and professional copy.
-        </p>
-
-        <div class="module-form-group">
-
-            <input
-                type="text"
-                id="websiteQueryInput"
-                placeholder="e.g. SaaS website for an AI startup"
-            >
-
-            <button
-                class="action-btn"
-                id="generateWebsiteCopyBtn"
-                type="button"
-            >
-                Generate Website Copy
-            </button>
+          </div>
 
         </div>
 
-        <div
-            class="module-output"
-            id="websiteBuilderOutput"
-        >
-            Your website content will appear here...
-        </div>
-
-    </div>
-
-</section>
+      </section>
 
 
-<!-- 7. MARKETING ASSISTANT -->
-<section id="marketingAssistantTab" class="tab-pane">
+      <!-- Message Box -->
+      <div class="composer-wrap">
 
-    <div class="module-card">
+        <form class="composer" id="composer">
 
-        <h2>Marketing Assistant</h2>
+          <textarea
+            id="messageInput"
+            rows="1"
+            placeholder="Message BizPilot AI..."
+            autocomplete="off">
+          </textarea>
 
-        <p>
-            Create marketing ideas, ads and social media content.
-        </p>
-
-        <div class="module-form-group">
-
-            <input
-                type="text"
-                id="marketingQueryInput"
-                placeholder="e.g. Launch campaign for a clothing brand"
-            >
-
-            <button
-                class="action-btn"
-                id="generateMarketingBtn"
-                type="button"
-            >
-                Generate Marketing Plan
-            </button>
-
-        </div>
-
-        <div
-            class="module-output"
-            id="marketingAssistantOutput"
-        >
-            Your marketing plan will appear here...
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- 8. AI ASSISTANT -->
-<section id="assistantTab" class="tab-pane">
-
-    <div class="module-card">
-
-        <h2>AI Assistant</h2>
-
-        <div
-            id="chatMessages"
-            class="chat-messages"
-        >
-
-            <div class="message ai-message">
-                <div class="message-content">
-                    Hello! I'm your BizPilot AI assistant.
-                    How can I help?
-                </div>
-            </div>
-
-        </div>
-
-        <form id="chatForm">
-
-            <input
-                type="text"
-                id="userInput"
-                placeholder="Ask anything about your business..."
-            >
-
-            <button
-                class="action-btn"
-                type="submit"
-            >
-                Send
-            </button>
+          <button
+            class="send"
+            type="submit"
+            aria-label="Send">
+            ↑
+          </button>
 
         </form>
 
-    </div>
-
-</section>
-
-
-<!-- 9. ANALYTICS -->
-<section id="analyticsTab" class="tab-pane">
-
-    <div class="module-card">
-
-        <h2>Analytics</h2>
-
-        <div class="analytics-metrics-grid">
-
-            <div class="metric-box">
-                <span>API Requests</span>
-                <strong id="analyticsQueries">0</strong>
-            </div>
-
-            <div class="metric-box">
-                <span>Active Modules</span>
-                <strong>11</strong>
-            </div>
-
-            <div class="metric-box">
-                <span>Status</span>
-                <strong>Connected</strong>
-            </div>
-
+        <div class="disclaimer">
+          BizPilot AI can make mistakes.
+          Check important business information.
         </div>
 
-    </div>
+      </div>
 
-</section>
+    </main>
 
-
-<!-- 10. PRICING -->
-<section id="pricingTab" class="tab-pane">
-
-    <div class="pricing-container">
-
-        <h2>Choose Your Plan</h2>
-
-        <div class="pricing-grid">
-
-            <div class="pricing-card">
-
-                <h3>Free</h3>
-
-                <div class="price">
-                    $0
-                    <small>/month</small>
-                </div>
-
-                <p>
-                    Explore BizPilot AI.
-                </p>
-
-                <button
-                    class="action-btn secondary"
-                    type="button"
-                >
-                    Current Plan
-                </button>
-
-            </div>
+  </div>
 
 
-            <div class="pricing-card featured">
-
-                <h3>Pro Enterprise</h3>
-
-                <div class="price">
-                    $49
-                    <small>/month</small>
-                </div>
-
-                <p>
-                    Advanced AI business tools.
-                </p>
-
-                <button
-                    class="action-btn"
-                    type="button"
-                >
-                    Upgrade
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
+  <!-- Mobile Overlay -->
+  <div class="overlay" id="overlay"></div>
 
 
-<!-- 11. SETTINGS -->
-<section id="settingsTab" class="tab-pane">
+  <!-- JavaScript -->
+  <script src="script.js"></script>
 
-    <div class="module-card">
-
-        <h2>Settings</h2>
-
-        <div class="form-group">
-
-            <label for="languageSelect">
-                Preferred Language
-            </label>
-
-            <select id="languageSelect">
-
-                <option value="en">
-                    English
-                </option>
-
-                <option value="bn">
-                    বাংলা
-                </option>
-
-                <option value="ar">
-                    العربية
-                </option>
-
-            </select>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-</div>
-
-</main>
-
-</div>
-<script src="script.js?v=3"></script>
-
+</body>
+</html>
