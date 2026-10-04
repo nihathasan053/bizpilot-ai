@@ -123,7 +123,7 @@ function addAssistantMessage(text) {
 /* =========================
    SEND MESSAGE
 ========================= */
-function sendMessage(text) {
+async function sendMessage(text) {
 
   const cleanText = text.trim();
 
@@ -184,46 +184,6 @@ function sendMessage(text) {
       "Backend-এর সঙ্গে যোগাযোগ করা যাচ্ছে না।"
     );
 
-  }
-
-      const data = await response.json();
-
-      loadingRow.remove();
-
-      if (!response.ok) {
-
-        addAssistantMessage(
-          "দুঃখিত, AI response পাওয়া যায়নি। " +
-          (data.error || "Server error")
-        );
-
-        return;
-      }
-
-      addAssistantMessage(data.reply);
-
-    })
-    .catch(function(error) {
-
-      console.error(error);
-
-      loadingRow.remove();
-
-      addAssistantMessage(
-        "Backend-এর সঙ্গে যোগাযোগ করা যাচ্ছে না।"
-      );
-
-    });
-
-  } catch (error) {
-
-    console.error(error);
-
-    loadingRow.remove();
-
-    addAssistantMessage(
-      "একটি সমস্যা হয়েছে। আবার চেষ্টা করুন।"
-    );
   }
 }
 
