@@ -150,8 +150,6 @@ function sendMessage(text) {
 
   try {
 
-    try {
-
     const response = await fetch('/api/chat', {
       method: "POST",
       headers: {
@@ -186,8 +184,7 @@ function sendMessage(text) {
       "Backend-এর সঙ্গে যোগাযোগ করা যাচ্ছে না।"
     );
 
-    }
-    .then(async function(response) {
+  }
 
       const data = await response.json();
 
