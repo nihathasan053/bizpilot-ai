@@ -123,7 +123,6 @@ function addAssistantMessage(text) {
 /* =========================
    SEND MESSAGE
 ========================= */
-
 function sendMessage(text) {
 
   const cleanText = text.trim();
@@ -135,24 +134,77 @@ function sendMessage(text) {
   addMessage(cleanText);
 
   input.value = "";
-
   input.style.height = "auto";
 
+  const loadingRow = document.createElement("div");
+  loadingRow.className = "message assistant";
 
-  /*
-     Temporary AI response.
+  const loadingBubble = document.createElement("div");
+  loadingBubble.className = "message-bubble";
+  loadingBubble.textContent = "BizPilot AI ভাবছে...";
 
-     পরে এখানে আসল BizPilot AI backend/API
-     যুক্ত করা হবে।
-  */
+  loadingRow.appendChild(loadingBubble);
+  chat.appendChild(loadingRow);
 
-  setTimeout(function () {
+  chat.scrollTop = chat.scrollHeight;
+
+  try {
+
+    fetch(
+      "https://bizpilot-4u9qddsfi-bizpilot8.vercel.app/api/chat",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          message: cleanText
+        })
+      }
+    )
+    .then(async function(response) {
+
+      const data = await response.json();
+
+      loadingRow.remove();
+
+      if (!response.ok) {
+
+        addAssistantMessage(
+          "দুঃখিত, AI response পাওয়া যায়নি। " +
+          (data.error || "Server error")
+        );
+
+        return;
+      }
+
+      addAssistantMessage(data.reply);
+
+    })
+    .catch(function(error) {
+
+      console.error(error);
+
+      loadingRow.remove();
+
+      addAssistantMessage(
+        "Backend-এর সঙ্গে যোগাযোগ করা যাচ্ছে না।"
+      );
+
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    loadingRow.remove();
 
     addAssistantMessage(
-      "আমি আপনার প্রশ্নটি বুঝেছি। BizPilot AI-এর আসল AI response এখনো সংযুক্ত করা হয়নি। পরের ধাপে আমরা আপনার AI backend এখানে যুক্ত করব।"
+      "একটি সমস্যা হয়েছে। আবার চেষ্টা করুন।"
     );
-
-  }, 500);
+  }
 }
 
 
