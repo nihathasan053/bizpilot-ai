@@ -150,26 +150,43 @@ function sendMessage(text) {
 
   try {
 
-    fetch(
-     fetch('/api/chat', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ message: cleanText })
-})
-      {
-        method: "POST",
+    try {
 
-        headers: {
-          "Content-Type": "application/json"
-        },
+    const response = await fetch('/api/chat', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: cleanText
+      })
+    });
 
-        body: JSON.stringify({
-          message: cleanText
-        })
-      }
-    )
+    const data = await response.json();
+
+    loadingRow.remove();
+
+    if (!response.ok) {
+      addAssistantMessage(
+        "দুঃখিত, AI response পাওয়া যায়নি। " +
+        (data.error || "Server error")
+      );
+      return;
+    }
+
+    addAssistantMessage(data.reply);
+
+  } catch (error) {
+
+    console.error(error);
+
+    loadingRow.remove();
+
+    addAssistantMessage(
+      "Backend-এর সঙ্গে যোগাযোগ করা যাচ্ছে না।"
+    );
+
+    }
     .then(async function(response) {
 
       const data = await response.json();
