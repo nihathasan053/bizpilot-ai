@@ -150,7 +150,7 @@ async function sendMessage(text) {
 
   try {
 
-    const response = await fetch('/api/chat', {
+     const response = await fetch('/api/chat', {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -159,6 +159,7 @@ async function sendMessage(text) {
         message: cleanText
       })
     });
+ 
 
     const data = await response.json();
 
